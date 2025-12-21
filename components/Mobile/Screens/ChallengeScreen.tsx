@@ -221,11 +221,11 @@ export default function ChallengeScreen() {
                         </div>
 
                         <div className="bg-white/90 backdrop-blur-sm p-2.5 rounded-xl shadow-sm border border-gray-100">
-                            <label className="text-xs font-bold text-gray-600 uppercase block mb-1.5">Intervallo Note</label>
-                            <div className="flex items-center gap-2">
-                                <input type="text" value={noteRange.low} onChange={e => setNoteRange({ ...noteRange, low: e.target.value })} className="flex-1 py-2 px-3 rounded-lg border border-gray-200 text-center font-semibold focus:border-amber-400 focus:outline-none" />
-                                <span className="text-gray-400 font-bold">—</span>
-                                <input type="text" value={noteRange.high} onChange={e => setNoteRange({ ...noteRange, high: e.target.value })} className="flex-1 py-2 px-3 rounded-lg border border-gray-200 text-center font-semibold focus:border-amber-400 focus:outline-none" />
+                            <label className="text-xs font-bold text-gray-600 uppercase block mb-1.5">Intervallo</label>
+                            <div className="flex items-center gap-1.5">
+                                <input type="text" value={noteRange.low} onChange={e => setNoteRange({ ...noteRange, low: e.target.value })} className="flex-1 py-1.5 px-2 text-sm rounded-lg border border-gray-200 text-center font-semibold focus:border-amber-400 focus:outline-none" placeholder="C4" />
+                                <span className="text-gray-400 text-sm">—</span>
+                                <input type="text" value={noteRange.high} onChange={e => setNoteRange({ ...noteRange, high: e.target.value })} className="flex-1 py-1.5 px-2 text-sm rounded-lg border border-gray-200 text-center font-semibold focus:border-amber-400 focus:outline-none" placeholder="C5" />
                             </div>
                         </div>
 
