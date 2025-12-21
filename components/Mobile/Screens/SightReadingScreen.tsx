@@ -10,6 +10,7 @@ import { NoteQueueManager } from '@/lib/generator/queue-manager';
 import { checkNoteMatch } from '@/lib/generator/note-generator';
 import { useMIDIInput } from '@/hooks/useMIDIInput';
 import { MIDINoteEvent } from '@/lib/types/midi';
+import MobileScreenHeader from '@/components/Mobile/MobileScreenHeader';
 
 const KEY_SIGNATURES: KeySignature[] = ['C', 'G', 'D', 'A', 'E', 'F', 'Bb', 'Eb', 'Ab'];
 
@@ -97,68 +98,71 @@ export default function SightReadingScreen() {
         <div className="flex flex-col h-full bg-gradient-to-br from-stone-50 to-stone-100 overflow-hidden">
             {/* Settings Panel - Portrait Mode */}
             {!isPlaying && (
-                <div className="flex-1 overflow-y-auto px-3 py-3 pb-safe">
-                    <div className="max-w-md mx-auto space-y-2.5">
-                        {/* Key Signature */}
-                        <div className="bg-white/90 backdrop-blur-sm p-2.5 rounded-xl shadow-sm border border-gray-100">
-                            <label className="text-xs font-bold text-gray-600 uppercase block mb-1.5">Tonalità</label>
-                            <div className="grid grid-cols-5 gap-1.5">
-                                {KEY_SIGNATURES.map(key => (
-                                    <button
-                                        key={key}
-                                        onClick={() => setKeySignature(key)}
-                                        className={`py-2 rounded-lg text-sm font-bold transition-all ${keySignature === key ? 'bg-blue-500 text-white shadow-md scale-105' : 'bg-gray-100 text-gray-600'}`}
-                                    >
-                                        {key}
-                                    </button>
-                                ))}
+                <>
+                    <MobileScreenHeader title={t('sight_reading.title')} />
+                    <div className="flex-1 overflow-y-auto px-3 py-3 pb-safe">
+                        <div className="max-w-md mx-auto space-y-2.5">
+                            {/* Key Signature */}
+                            <div className="bg-white/90 backdrop-blur-sm p-2.5 rounded-xl shadow-sm border border-gray-100">
+                                <label className="text-xs font-bold text-gray-600 uppercase block mb-1.5">Tonalità</label>
+                                <div className="grid grid-cols-5 gap-1.5">
+                                    {KEY_SIGNATURES.map(key => (
+                                        <button
+                                            key={key}
+                                            onClick={() => setKeySignature(key)}
+                                            className={`py-2 rounded-lg text-sm font-bold transition-all ${keySignature === key ? 'bg-blue-500 text-white shadow-md scale-105' : 'bg-gray-100 text-gray-600'}`}
+                                        >
+                                            {key}
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
-                        </div>
 
-                        {/* Note Range - Compact */}
-                        <div className="bg-white/90 backdrop-blur-sm p-2.5 rounded-xl shadow-sm border border-gray-100">
-                            <label className="text-xs font-bold text-gray-600 uppercase block mb-1.5">Intervallo</label>
-                            <div className="flex items-center gap-1.5">
-                                <input
-                                    type="text"
-                                    value={noteRange.low}
-                                    onChange={e => setNoteRange({ ...noteRange, low: e.target.value })}
-                                    className="flex-1 py-1.5 px-2 text-sm rounded-lg border border-gray-200 text-center font-semibold focus:border-blue-400 focus:outline-none"
-                                    placeholder="C4"
-                                />
-                                <span className="text-gray-400 text-sm">—</span>
-                                <input
-                                    type="text"
-                                    value={noteRange.high}
-                                    onChange={e => setNoteRange({ ...noteRange, high: e.target.value })}
-                                    className="flex-1 py-1.5 px-2 text-sm rounded-lg border border-gray-200 text-center font-semibold focus:border-blue-400 focus:outline-none"
-                                    placeholder="C5"
-                                />
+                            {/* Note Range - Compact */}
+                            <div className="bg-white/90 backdrop-blur-sm p-2.5 rounded-xl shadow-sm border border-gray-100">
+                                <label className="text-xs font-bold text-gray-600 uppercase block mb-1.5">Intervallo</label>
+                                <div className="flex items-center gap-1.5">
+                                    <input
+                                        type="text"
+                                        value={noteRange.low}
+                                        onChange={e => setNoteRange({ ...noteRange, low: e.target.value })}
+                                        className="flex-1 py-1.5 px-2 text-sm rounded-lg border border-gray-200 text-center font-semibold focus:border-blue-400 focus:outline-none"
+                                        placeholder="C4"
+                                    />
+                                    <span className="text-gray-400 text-sm">—</span>
+                                    <input
+                                        type="text"
+                                        value={noteRange.high}
+                                        onChange={e => setNoteRange({ ...noteRange, high: e.target.value })}
+                                        className="flex-1 py-1.5 px-2 text-sm rounded-lg border border-gray-200 text-center font-semibold focus:border-blue-400 focus:outline-none"
+                                        placeholder="C5"
+                                    />
+                                </div>
                             </div>
+
+                            {/* MIDI Info */}
+                            <div className="bg-blue-50/80 backdrop-blur-sm border border-blue-200 rounded-xl p-3 text-sm text-blue-800">
+                                <p className="font-semibold mb-1 flex items-center gap-2">
+                                    <span>🎹</span>
+                                    <span>Collegamento MIDI</span>
+                                </p>
+                                <p className="text-xs text-blue-700">
+                                    Collega la tastiera MIDI per suonare le note visualizzate sul pentagramma. L'app rileverà automaticamente l'input.
+                                </p>
+                            </div>
+
+                            <button
+                                onClick={startGame}
+                                className="w-full bg-gradient-to-r from-blue-500 via-indigo-500 to-blue-600 text-white font-black py-4 rounded-2xl shadow-xl active:scale-95 transition-transform flex items-center justify-center gap-3 text-xl mt-4 border-2 border-blue-400"
+                            >
+                                <span className="text-3xl">▶️</span>
+                                <span>{t('common.start')}</span>
+                            </button>
+
+                            <div className="h-4"></div>
                         </div>
-
-                        {/* MIDI Info */}
-                        <div className="bg-blue-50/80 backdrop-blur-sm border border-blue-200 rounded-xl p-3 text-sm text-blue-800">
-                            <p className="font-semibold mb-1 flex items-center gap-2">
-                                <span>🎹</span>
-                                <span>Collegamento MIDI</span>
-                            </p>
-                            <p className="text-xs text-blue-700">
-                                Collega la tastiera MIDI per suonare le note visualizzate sul pentagramma. L'app rileverà automaticamente l'input.
-                            </p>
-                        </div>
-
-                        <button
-                            onClick={startGame}
-                            className="w-full bg-gradient-to-r from-blue-500 via-indigo-500 to-blue-600 text-white font-black py-4 rounded-2xl shadow-xl active:scale-95 transition-transform flex items-center justify-center gap-3 text-xl mt-4 border-2 border-blue-400"
-                        >
-                            <span className="text-3xl">▶️</span>
-                            <span>{t('common.start')}</span>
-                        </button>
-
-                        <div className="h-4"></div>
                     </div>
-                </div>
+                </>
             )}
 
             {/* Exercise Area - Landscape Mode */}

@@ -8,6 +8,7 @@ import ChallengeStaff from '@/components/Staff/ChallengeStaff';
 import { generateRandomNote } from '@/lib/generator/note-generator';
 import { GeneratedNote, KeySignature, NoteRange } from '@/lib/generator/types';
 import { useMIDIInput } from '@/hooks/useMIDIInput';
+import MobileScreenHeader from '@/components/Mobile/MobileScreenHeader';
 import { MIDINoteEvent } from '@/lib/types/midi';
 
 const HIT_X = 100;
@@ -201,54 +202,57 @@ export default function ChallengeScreen() {
     return (
         <div className="flex flex-col h-full bg-gradient-to-br from-stone-50 to-stone-100 overflow-hidden">
             {!isPlaying && (
-                <div className="flex-1 overflow-y-auto px-3 py-3 pb-safe">
-                    <div className="max-w-md mx-auto space-y-2.5">
-                        <div className="bg-white/90 backdrop-blur-sm p-2.5 rounded-xl shadow-sm border border-gray-100">
-                            <div className="flex items-center justify-between mb-1.5">
-                                <label className="text-xs font-bold text-gray-600 uppercase">Velocità</label>
-                                <span className="text-lg font-black text-amber-600">{bpm} BPM</span>
+                <>
+                    <MobileScreenHeader title={t('challenge.title')} />
+                    <div className="flex-1 overflow-y-auto px-3 py-3 pb-safe">
+                        <div className="max-w-md mx-auto space-y-2.5">
+                            <div className="bg-white/90 backdrop-blur-sm p-2.5 rounded-xl shadow-sm border border-gray-100">
+                                <div className="flex items-center justify-between mb-1.5">
+                                    <label className="text-xs font-bold text-gray-600 uppercase">Velocità</label>
+                                    <span className="text-lg font-black text-amber-600">{bpm} BPM</span>
+                                </div>
+                                <input type="range" min="30" max="180" value={bpm} onChange={(e) => setBpm(Number(e.target.value))} className="w-full h-1.5 accent-amber-500" />
                             </div>
-                            <input type="range" min="30" max="180" value={bpm} onChange={(e) => setBpm(Number(e.target.value))} className="w-full h-1.5 accent-amber-500" />
-                        </div>
 
-                        <div className="bg-white/90 backdrop-blur-sm p-2.5 rounded-xl shadow-sm border border-gray-100">
-                            <label className="text-xs font-bold text-gray-600 uppercase block mb-1.5">Tonalità</label>
-                            <div className="grid grid-cols-5 gap-1.5">
-                                {KEY_SIGNATURES.map(key => (
-                                    <button key={key} onClick={() => setKeySignature(key)} className={`py-2 rounded-lg text-sm font-bold transition-all ${keySignature === key ? 'bg-amber-500 text-white shadow-md scale-105' : 'bg-gray-100 text-gray-600'}`}>{key}</button>
-                                ))}
+                            <div className="bg-white/90 backdrop-blur-sm p-2.5 rounded-xl shadow-sm border border-gray-100">
+                                <label className="text-xs font-bold text-gray-600 uppercase block mb-1.5">Tonalità</label>
+                                <div className="grid grid-cols-5 gap-1.5">
+                                    {KEY_SIGNATURES.map(key => (
+                                        <button key={key} onClick={() => setKeySignature(key)} className={`py-2 rounded-lg text-sm font-bold transition-all ${keySignature === key ? 'bg-amber-500 text-white shadow-md scale-105' : 'bg-gray-100 text-gray-600'}`}>{key}</button>
+                                    ))}
+                                </div>
                             </div>
-                        </div>
 
-                        <div className="bg-white/90 backdrop-blur-sm p-2.5 rounded-xl shadow-sm border border-gray-100">
-                            <label className="text-xs font-bold text-gray-600 uppercase block mb-1.5">Intervallo</label>
-                            <div className="flex items-center gap-1.5">
-                                <input type="text" value={noteRange.low} onChange={e => setNoteRange({ ...noteRange, low: e.target.value })} className="flex-1 py-1.5 px-2 text-sm rounded-lg border border-gray-200 text-center font-semibold focus:border-amber-400 focus:outline-none" placeholder="C4" />
-                                <span className="text-gray-400 text-sm">—</span>
-                                <input type="text" value={noteRange.high} onChange={e => setNoteRange({ ...noteRange, high: e.target.value })} className="flex-1 py-1.5 px-2 text-sm rounded-lg border border-gray-200 text-center font-semibold focus:border-amber-400 focus:outline-none" placeholder="C5" />
+                            <div className="bg-white/90 backdrop-blur-sm p-2.5 rounded-xl shadow-sm border border-gray-100">
+                                <label className="text-xs font-bold text-gray-600 uppercase block mb-1.5">Intervallo</label>
+                                <div className="flex items-center gap-1.5">
+                                    <input type="text" value={noteRange.low} onChange={e => setNoteRange({ ...noteRange, low: e.target.value })} className="flex-1 py-1.5 px-2 text-sm rounded-lg border border-gray-200 text-center font-semibold focus:border-amber-400 focus:outline-none" placeholder="C4" />
+                                    <span className="text-gray-400 text-sm">—</span>
+                                    <input type="text" value={noteRange.high} onChange={e => setNoteRange({ ...noteRange, high: e.target.value })} className="flex-1 py-1.5 px-2 text-sm rounded-lg border border-gray-200 text-center font-semibold focus:border-amber-400 focus:outline-none" placeholder="C5" />
+                                </div>
                             </div>
+
+                            <div className="bg-amber-50/80 backdrop-blur-sm border border-amber-200 rounded-xl p-3 text-sm text-amber-800">
+                                <p className="font-semibold mb-2 flex items-center gap-2">
+                                    <span>🎮</span>
+                                    <span>Modalità di Gioco</span>
+                                </p>
+                                <ul className="text-xs text-amber-700 space-y-1">
+                                    <li>• Usa MIDI per suonare le note corrette</li>
+                                    <li>• Oppure tocca lo schermo per giocare senza MIDI</li>
+                                    <li>• Colpisci le note quando passano sulla linea verde</li>
+                                </ul>
+                            </div>
+
+                            <button onClick={startGame} className="w-full bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white font-black py-4 rounded-2xl shadow-xl active:scale-95 transition-transform flex items-center justify-center gap-3 text-xl mt-4 border-2 border-amber-400">
+                                <span className="text-3xl">▶️</span>
+                                <span>Inizia Sfida</span>
+                            </button>
+
+                            <div className="h-4"></div>
                         </div>
-
-                        <div className="bg-amber-50/80 backdrop-blur-sm border border-amber-200 rounded-xl p-3 text-sm text-amber-800">
-                            <p className="font-semibold mb-2 flex items-center gap-2">
-                                <span>🎮</span>
-                                <span>Modalità di Gioco</span>
-                            </p>
-                            <ul className="text-xs text-amber-700 space-y-1">
-                                <li>• Usa MIDI per suonare le note corrette</li>
-                                <li>• Oppure tocca lo schermo per giocare senza MIDI</li>
-                                <li>• Colpisci le note quando passano sulla linea verde</li>
-                            </ul>
-                        </div>
-
-                        <button onClick={startGame} className="w-full bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white font-black py-4 rounded-2xl shadow-xl active:scale-95 transition-transform flex items-center justify-center gap-3 text-xl mt-4 border-2 border-amber-400">
-                            <span className="text-3xl">▶️</span>
-                            <span>Inizia Sfida</span>
-                        </button>
-
-                        <div className="h-4"></div>
                     </div>
-                </div>
+                </>
             )}
 
             {isPlaying && (

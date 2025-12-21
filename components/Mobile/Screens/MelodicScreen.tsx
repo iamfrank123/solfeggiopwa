@@ -9,6 +9,7 @@ import generateMelodicPattern, { MelodicNote } from '@/lib/generator/melodic-gen
 import { useRhythmAudio } from '@/hooks/useRhythmAudio';
 import { useMIDIInput } from '@/hooks/useMIDIInput';
 import { MIDINoteEvent } from '@/lib/types/midi';
+import MobileScreenHeader from '@/components/Mobile/MobileScreenHeader';
 
 interface GameNote {
     id: string;
@@ -241,85 +242,88 @@ export default function MelodicScreen() {
     return (
         <div className="flex flex-col h-full bg-gradient-to-br from-stone-50 to-stone-100 overflow-hidden">
             {!isPlaying && (
-                <div className="flex-1 overflow-y-auto px-3 py-3 pb-safe">
-                    <div className="max-w-md mx-auto space-y-2.5">
-                        <div className="bg-white/90 backdrop-blur-sm p-2.5 rounded-xl shadow-sm border border-gray-100">
-                            <div className="flex items-center justify-between mb-1.5">
-                                <label className="text-xs font-bold text-gray-600 uppercase">{t('common.bpm')}</label>
-                                <span className="text-lg font-black text-amber-600">{bpm}</span>
+                <>
+                    <MobileScreenHeader title={t('melodic.title')} />
+                    <div className="flex-1 overflow-y-auto px-3 py-3 pb-safe">
+                        <div className="max-w-md mx-auto space-y-2.5">
+                            <div className="bg-white/90 backdrop-blur-sm p-2.5 rounded-xl shadow-sm border border-gray-100">
+                                <div className="flex items-center justify-between mb-1.5">
+                                    <label className="text-xs font-bold text-gray-600 uppercase">{t('common.bpm')}</label>
+                                    <span className="text-lg font-black text-amber-600">{bpm}</span>
+                                </div>
+                                <input type="range" min="40" max="200" value={bpm} onChange={(e) => setBpm(Number(e.target.value))} className="w-full h-1.5 accent-amber-500" />
                             </div>
-                            <input type="range" min="40" max="200" value={bpm} onChange={(e) => setBpm(Number(e.target.value))} className="w-full h-1.5 accent-amber-500" />
-                        </div>
 
-                        <div className="bg-white/90 backdrop-blur-sm p-2.5 rounded-xl shadow-sm border border-gray-100">
-                            <div className="flex gap-2">
-                                <div className="flex-1">
-                                    <label className="text-xs font-bold text-gray-600 uppercase block mb-1">Tempo</label>
-                                    <div className="flex gap-1.5">
-                                        {(['3/4', '4/4'] as const).map(sig => (
-                                            <button key={sig} onClick={() => setTimeSignature(sig)} className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all ${timeSignature === sig ? 'bg-amber-600 text-white shadow-md' : 'bg-gray-100 text-gray-600'}`}>{sig}</button>
-                                        ))}
+                            <div className="bg-white/90 backdrop-blur-sm p-2.5 rounded-xl shadow-sm border border-gray-100">
+                                <div className="flex gap-2">
+                                    <div className="flex-1">
+                                        <label className="text-xs font-bold text-gray-600 uppercase block mb-1">Tempo</label>
+                                        <div className="flex gap-1.5">
+                                            {(['3/4', '4/4'] as const).map(sig => (
+                                                <button key={sig} onClick={() => setTimeSignature(sig)} className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all ${timeSignature === sig ? 'bg-amber-600 text-white shadow-md' : 'bg-gray-100 text-gray-600'}`}>{sig}</button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    <div className="flex-1">
+                                        <label className="text-xs font-bold text-gray-600 uppercase block mb-1">Tonalità</label>
+                                        <select value={keySignature} onChange={e => setKeySignature(e.target.value as any)} className="w-full py-1.5 px-2 rounded-lg border border-gray-200 text-xs font-semibold focus:border-amber-400 focus:outline-none">
+                                            {KEY_SIGS.map(k => (<option key={k} value={k}>{k}</option>))}
+                                        </select>
                                     </div>
                                 </div>
-                                <div className="flex-1">
-                                    <label className="text-xs font-bold text-gray-600 uppercase block mb-1">Tonalità</label>
-                                    <select value={keySignature} onChange={e => setKeySignature(e.target.value as any)} className="w-full py-1.5 px-2 rounded-lg border border-gray-200 text-xs font-semibold focus:border-amber-400 focus:outline-none">
-                                        {KEY_SIGS.map(k => (<option key={k} value={k}>{k}</option>))}
-                                    </select>
+                            </div>
+
+                            <div className="bg-white/90 backdrop-blur-sm p-2.5 rounded-xl shadow-sm border border-gray-100">
+                                <label className="text-xs font-bold text-gray-600 uppercase block mb-1.5">Note</label>
+                                <div className="flex gap-1.5">
+                                    {[{ id: 'w', icon: '𝅝' }, { id: 'h', icon: '𝅗𝅥' }, { id: 'q', icon: '♩' }, { id: '8', icon: '♪' }, { id: '16', icon: '♬' }].map(opt => (
+                                        <button key={opt.id} onClick={() => { if (allowedDurations.includes(opt.id as any)) setAllowedDurations(allowedDurations.filter(d => d !== opt.id)); else setAllowedDurations([...allowedDurations, opt.id as any]); }} className={`flex-1 py-2 rounded-lg font-bold text-lg transition-all ${allowedDurations.includes(opt.id as any) ? 'bg-amber-500 text-white shadow-md scale-105' : 'bg-gray-100 text-gray-400'}`}>{opt.icon}</button>
+                                    ))}
                                 </div>
                             </div>
-                        </div>
 
-                        <div className="bg-white/90 backdrop-blur-sm p-2.5 rounded-xl shadow-sm border border-gray-100">
-                            <label className="text-xs font-bold text-gray-600 uppercase block mb-1.5">Note</label>
-                            <div className="flex gap-1.5">
-                                {[{ id: 'w', icon: '𝅝' }, { id: 'h', icon: '𝅗𝅥' }, { id: 'q', icon: '♩' }, { id: '8', icon: '♪' }, { id: '16', icon: '♬' }].map(opt => (
-                                    <button key={opt.id} onClick={() => { if (allowedDurations.includes(opt.id as any)) setAllowedDurations(allowedDurations.filter(d => d !== opt.id)); else setAllowedDurations([...allowedDurations, opt.id as any]); }} className={`flex-1 py-2 rounded-lg font-bold text-lg transition-all ${allowedDurations.includes(opt.id as any) ? 'bg-amber-500 text-white shadow-md scale-105' : 'bg-gray-100 text-gray-400'}`}>{opt.icon}</button>
-                                ))}
+                            <div className="bg-white/90 backdrop-blur-sm p-2.5 rounded-xl shadow-sm border border-gray-100">
+                                <label className="text-xs font-bold text-gray-600 uppercase block mb-1.5">Intervallo</label>
+                                <div className="flex items-center gap-1.5">
+                                    <input type="text" value={minNote} onChange={e => setMinNote(e.target.value)} className="flex-1 py-1.5 px-2 text-sm rounded-lg border border-gray-200 text-center font-semibold focus:border-amber-400 focus:outline-none" placeholder="C4" />
+                                    <span className="text-gray-400 text-sm">—</span>
+                                    <input type="text" value={maxNote} onChange={e => setMaxNote(e.target.value)} className="flex-1 py-1.5 px-2 text-sm rounded-lg border border-gray-200 text-center font-semibold focus:border-amber-400 focus:outline-none" placeholder="C5" />
+                                </div>
                             </div>
-                        </div>
 
-                        <div className="bg-white/90 backdrop-blur-sm p-2.5 rounded-xl shadow-sm border border-gray-100">
-                            <label className="text-xs font-bold text-gray-600 uppercase block mb-1.5">Intervallo</label>
-                            <div className="flex items-center gap-1.5">
-                                <input type="text" value={minNote} onChange={e => setMinNote(e.target.value)} className="flex-1 py-1.5 px-2 text-sm rounded-lg border border-gray-200 text-center font-semibold focus:border-amber-400 focus:outline-none" placeholder="C4" />
-                                <span className="text-gray-400 text-sm">—</span>
-                                <input type="text" value={maxNote} onChange={e => setMaxNote(e.target.value)} className="flex-1 py-1.5 px-2 text-sm rounded-lg border border-gray-200 text-center font-semibold focus:border-amber-400 focus:outline-none" placeholder="C5" />
+                            <div className="bg-white/90 backdrop-blur-sm p-2.5 rounded-xl shadow-sm border border-gray-100">
+                                <div className="flex flex-wrap gap-1.5">
+                                    <label className={`flex-1 min-w-[90px] flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg cursor-pointer transition-all ${includeRests ? 'bg-amber-500 text-white shadow-md' : 'bg-gray-100 text-gray-600'}`}>
+                                        <input type="checkbox" checked={includeRests} onChange={e => setIncludeRests(e.target.checked)} className="hidden" />
+                                        <span className="text-xs font-semibold">🎵 Pause</span>
+                                    </label>
+                                    <label className={`flex-1 min-w-[90px] flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg cursor-pointer transition-all ${isMetronomeEnabled ? 'bg-amber-500 text-white shadow-md' : 'bg-gray-100 text-gray-600'}`}>
+                                        <input type="checkbox" checked={isMetronomeEnabled} onChange={e => setIsMetronomeEnabled(e.target.checked)} className="hidden" />
+                                        <span className="text-xs font-semibold">⏱️ Metronomo</span>
+                                    </label>
+                                </div>
                             </div>
-                        </div>
 
-                        <div className="bg-white/90 backdrop-blur-sm p-2.5 rounded-xl shadow-sm border border-gray-100">
-                            <div className="flex flex-wrap gap-1.5">
-                                <label className={`flex-1 min-w-[90px] flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg cursor-pointer transition-all ${includeRests ? 'bg-amber-500 text-white shadow-md' : 'bg-gray-100 text-gray-600'}`}>
-                                    <input type="checkbox" checked={includeRests} onChange={e => setIncludeRests(e.target.checked)} className="hidden" />
-                                    <span className="text-xs font-semibold">🎵 Pause</span>
-                                </label>
-                                <label className={`flex-1 min-w-[90px] flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg cursor-pointer transition-all ${isMetronomeEnabled ? 'bg-amber-500 text-white shadow-md' : 'bg-gray-100 text-gray-600'}`}>
-                                    <input type="checkbox" checked={isMetronomeEnabled} onChange={e => setIsMetronomeEnabled(e.target.checked)} className="hidden" />
-                                    <span className="text-xs font-semibold">⏱️ Metronomo</span>
-                                </label>
+                            {/* MIDI Requirement Info */}
+                            <div className="bg-amber-50/90 backdrop-blur-sm border border-amber-300 rounded-xl p-3 text-sm">
+                                <p className="font-bold text-amber-900 mb-1 flex items-center gap-2">
+                                    <span>🎹</span>
+                                    <span>{t('melodic.midi_required_title')}</span>
+                                </p>
+                                <p className="text-xs text-amber-800 leading-relaxed">
+                                    {t('melodic.midi_required_desc')}
+                                </p>
                             </div>
+
+                            <button onClick={startGame} className="w-full bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white font-black py-4 rounded-2xl shadow-xl active:scale-95 transition-transform flex items-center justify-center gap-3 text-xl mt-4 border-2 border-amber-400">
+                                <span className="text-3xl">▶️</span>
+                                <span>{t('common.start')}</span>
+                            </button>
+
+                            <div className="h-4"></div>
                         </div>
-
-                        {/* MIDI Requirement Info */}
-                        <div className="bg-amber-50/90 backdrop-blur-sm border border-amber-300 rounded-xl p-3 text-sm">
-                            <p className="font-bold text-amber-900 mb-1 flex items-center gap-2">
-                                <span>🎹</span>
-                                <span>{t('melodic.midi_required_title')}</span>
-                            </p>
-                            <p className="text-xs text-amber-800 leading-relaxed">
-                                {t('melodic.midi_required_desc')}
-                            </p>
-                        </div>
-
-                        <button onClick={startGame} className="w-full bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white font-black py-4 rounded-2xl shadow-xl active:scale-95 transition-transform flex items-center justify-center gap-3 text-xl mt-4 border-2 border-amber-400">
-                            <span className="text-3xl">▶️</span>
-                            <span>{t('common.start')}</span>
-                        </button>
-
-                        <div className="h-4"></div>
                     </div>
-                </div>
+                </>
             )}
 
             {isPlaying && (
