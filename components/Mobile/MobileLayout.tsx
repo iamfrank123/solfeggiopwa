@@ -63,7 +63,7 @@ function MobileLayoutContent() {
             {!isExerciseActive && <ModeSelector />}
 
             {/* Main Content Area */}
-            <div className="flex-1 overflow-hidden" style={{ marginTop: isExerciseActive ? '0' : '76px' }}>
+            <div className="flex-1 overflow-hidden" style={{ marginTop: isExerciseActive ? '0' : '96px' }}>
                 <MobileScreenTransition screenKey={currentMode}>
                     {renderScreen()}
                 </MobileScreenTransition>
