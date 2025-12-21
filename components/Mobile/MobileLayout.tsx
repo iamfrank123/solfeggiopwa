@@ -1,8 +1,7 @@
 'use client';
 
-import React, { ReactNode, useEffect } from 'react';
-import { MobileProvider, useMobile, ExerciseMode } from '@/context/MobileContext';
-import { useOrientation } from '@/hooks/useOrientation';
+import React from 'react';
+import { MobileProvider, useMobile } from '@/context/MobileContext';
 import ModeSelector from './ModeSelector';
 import MobileScreenTransition from './MobileScreenTransition';
 import RhythmScreen from './Screens/RhythmScreen';
@@ -12,14 +11,6 @@ import ChallengeScreen from './Screens/ChallengeScreen';
 
 function MobileLayoutContent() {
     const { currentMode, isExerciseActive } = useMobile();
-    const { lockPortrait } = useOrientation();
-
-    // Lock to portrait on mount (default state)
-    useEffect(() => {
-        if (!isExerciseActive) {
-            lockPortrait();
-        }
-    }, [isExerciseActive, lockPortrait]);
 
     const renderScreen = () => {
         switch (currentMode) {
