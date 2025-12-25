@@ -47,7 +47,7 @@ export default function ScrollingStaff({
             renderDiv.id = uniqueId;
             renderDiv.style.overflowX = 'auto';
             renderDiv.style.overflowY = 'hidden';
-            renderDiv.style.paddingLeft = '40px';
+            renderDiv.style.paddingLeft = '100px';
             containerRef.current.appendChild(renderDiv);
 
             // Use Vex.Flow.Renderer instead of Factory for more control
@@ -193,6 +193,7 @@ renderer.resize(contentWidth, height);
         </div>
     );
 }
+
 
 
 
