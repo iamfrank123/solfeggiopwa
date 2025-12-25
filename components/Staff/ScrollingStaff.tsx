@@ -66,7 +66,7 @@ export default function ScrollingStaff({
             const context = renderer.getContext();
 
             // Create a stave
-            const stave = new VF.Stave(80, 40, contentWidth - 160);
+            const stave = new VF.Stave(150, 40, contentWidth - 300);
 
             // Force Treble clef as requested to prevent visual jumping
             const clef = 'treble';
@@ -193,3 +193,4 @@ export default function ScrollingStaff({
         </div>
     );
 }
+
