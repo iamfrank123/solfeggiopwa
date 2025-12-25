@@ -47,7 +47,7 @@ export default function ScrollingStaff({
             renderDiv.id = uniqueId;
             renderDiv.style.overflowX = 'auto';
             renderDiv.style.overflowY = 'hidden';
-            renderDiv.style.paddingLeft = '100px';
+            renderDiv.style.paddingLeft = '20px';
             containerRef.current.appendChild(renderDiv);
 
             // Use Vex.Flow.Renderer instead of Factory for more control
@@ -57,11 +57,11 @@ export default function ScrollingStaff({
             // Create notes (take first 20)
             const displayNotes = notes.slice(0, 20);
 
-          // Use dynamic width based on note count, but cap it or scale it
-const noteSpacing = 110; // Ridotto da 120
-const contentWidth = Math.max(750, displayNotes.length * noteSpacing + 80); // Ridotto da 800 e da +100
-const height = 250;
-renderer.resize(contentWidth, height);
+            // Use dynamic width based on note count, but cap it or scale it
+            const noteSpacing = 110; // Ridotto da 120
+            const contentWidth = Math.max(750, displayNotes.length * noteSpacing + 80); // Ridotto da 800 e da +100
+            const height = 250;
+            renderer.resize(contentWidth, height);
 
             const context = renderer.getContext();
 
@@ -169,10 +169,10 @@ renderer.resize(contentWidth, height);
             {notes.length > 0 ? (
                 <>
                     <div
-    ref={containerRef}
-    className="flex justify-start items-center min-h-[250px] w-full overflow-x-auto overflow-y-hidden border-2 border-gray-200 rounded-lg"
-    style={{ maxWidth: '100%', paddingLeft: '30px' }}
-/>
+                        ref={containerRef}
+                        className="flex justify-start items-center min-h-[250px] w-full overflow-x-auto overflow-y-hidden border-2 border-gray-200 rounded-lg"
+                        style={{ maxWidth: '100%' }}
+                    />
 
                     <div className="text-center mt-4 text-gray-600">
                         <p className="text-sm">
@@ -193,15 +193,3 @@ renderer.resize(contentWidth, height);
         </div>
     );
 }
-
-
-
-
-
-
-
-
-
-
-
-
