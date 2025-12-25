@@ -56,11 +56,12 @@ export default function ScrollingStaff({
             // Create notes (take first 20)
             const displayNotes = notes.slice(0, 20);
 
-            // Use dynamic width based on note count, but cap it or scale it
-            const noteSpacing = 120;
-            const contentWidth = Math.max(800, displayNotes.length * noteSpacing + 100);
-            const height = 250;
-            renderer.resize(contentWidth, height);
+            // Calcola la larghezza disponibile del contenitore
+const containerWidth = containerRef.current.clientWidth || 800;
+const noteSpacing = Math.min(120, (containerWidth - 100) / displayNotes.length);
+const contentWidth = Math.min(containerWidth - 40, displayNotes.length * noteSpacing + 100);
+const height = 250;
+renderer.resize(contentWidth, height);
 
             const context = renderer.getContext();
 
@@ -186,3 +187,4 @@ export default function ScrollingStaff({
         </div>
     );
 }
+
