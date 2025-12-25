@@ -58,9 +58,10 @@ export default function ScrollingStaff({
 
             // Riduci ulteriormente per mobile landscape
 const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-const noteSpacing = isMobile ? 250 : 110; // RADDOPPIATO a 200!
+const noteSpacing = isMobile ? 200 : 110;
+const containerWidth = containerRef.current?.clientWidth || window.innerWidth;
 const contentWidth = isMobile 
-    ? window.innerWidth * 1.5 // Larghezza 150% dello schermo per forzare l'espansione
+    ? containerWidth * 1.5 // Usa la larghezza del container invece di window
     : Math.max(750, displayNotes.length * noteSpacing + 80);
 const height = 250;
 renderer.resize(contentWidth, height);
@@ -189,6 +190,7 @@ renderer.resize(contentWidth, height);
         </div>
     );
 }
+
 
 
 
