@@ -47,7 +47,6 @@ export default function ScrollingStaff({
             renderDiv.id = uniqueId;
             renderDiv.style.overflowX = 'auto';
             renderDiv.style.overflowY = 'hidden';
-            renderDiv.style.paddingLeft = '20px';
             containerRef.current.appendChild(renderDiv);
 
             // Use Vex.Flow.Renderer instead of Factory for more control
@@ -58,15 +57,15 @@ export default function ScrollingStaff({
             const displayNotes = notes.slice(0, 20);
 
             // Use dynamic width based on note count, but cap it or scale it
-            const noteSpacing = 110; // Ridotto da 120
-            const contentWidth = Math.max(750, displayNotes.length * noteSpacing + 80); // Ridotto da 800 e da +100
+            const noteSpacing = 110;
+            const contentWidth = Math.max(750, displayNotes.length * noteSpacing + 80);
             const height = 250;
             renderer.resize(contentWidth, height);
 
             const context = renderer.getContext();
 
-            // Create a stave
-            const stave = new VF.Stave(150, 40, contentWidth - 300);
+            // Create a stave - aumentato margine sinistro
+            const stave = new VF.Stave(10, 40, contentWidth - 20);
 
             // Force Treble clef as requested to prevent visual jumping
             const clef = 'treble';
@@ -109,6 +108,12 @@ export default function ScrollingStaff({
             const svg = renderDiv.querySelector('svg');
             if (svg) {
                 svg.style.transition = 'all 0.3s ease-out';
+                
+                // SPOSTA IL PENTAGRAMMA A DESTRA CON MARGINE SVG SOLO SU MOBILE
+                const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+                if (isMobile) {
+                    svg.style.marginLeft = '50px';
+                }
 
                 // Apply colors to noteheads
                 const noteheads = svg.querySelectorAll('.vf-notehead');
@@ -139,12 +144,6 @@ export default function ScrollingStaff({
             }
 
             console.log('✅ Staff rendered successfully');
-            
-            // Forza lo scroll all'inizio SOLO su mobile
-            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-            if (renderDiv && isMobile) {
-                renderDiv.scrollLeft = 0;
-            }
 
         } catch (error) {
             console.error('❌ VexFlow rendering error:', error);
@@ -193,4 +192,3 @@ export default function ScrollingStaff({
         </div>
     );
 }
-
